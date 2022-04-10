@@ -1,0 +1,3791 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "VacciNation Project Swagger Documentation",
+    "version": "1.0.0",
+    "title": "VacciNation"
+  },
+  "tags": [
+    {
+      "name": "Database",
+      "description": "basic database connection functions"
+    },
+    {
+      "name": "User",
+      "description": "Add/Update/Modify/View User Accounts"
+    },
+    {
+      "name": "Appointments & Timeslots",
+      "description": "Add/update/delete/view appointments and time slots"
+    },
+    {
+      "name": "Vaccines",
+      "description": "Add/update/delete/view vaccines and vaccine info"
+    },
+    {
+      "name": "Report",
+      "description": "Getting important vaccination, staff, and reaction information for reporting purposes"
+    },
+    {
+      "name": "Reminders",
+      "description": "Sending reminder emails to citizens with appointment information"
+    },
+    {
+      "name": "Location",
+      "description": "Add/Update/View vaccination locations"
+    },
+    {
+      "name": "Eligibility",
+      "description": "manage eligibility requirements for vaccines"
+    },
+    {
+      "name": "Dynamic Content",
+      "description": "manage dynamic page content"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/DBConnect": {
+      "get": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "test the ability to connect to our database",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "DB connection created, opened, and closed successfully"
+          },
+          "404": {
+            "description": "DB connection could not close or exception was thrown"
+          }
+        }
+      }
+    },
+    "/UserStaff/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get a staff user by their id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "id of staff member",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - get staff member information"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "404": {
+            "description": "failed - a staff member with this id does not exist"
+          }
+        }
+      }
+    },
+    "/UserStaff/all": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "gets all staff members for display",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - list of all staff info including their role as a string"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/UserStaff/all/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "gets all staff members with a certain role for display",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "id of the role we are hoping to filter by",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - list of all staff info including their role as a string"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/UserCitizen/all": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "gets all citizens for display",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "202": {
+            "description": "success - list of all staff info including their role as a string"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      }
+    },
+    "/UserStaff/role": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "assigns a role to a staff member",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "staff_id",
+            "description": "id of the staff we are assign the role to",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "role_id",
+            "description": "id of the role we are assign the staff to",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - role was assigned"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden (role not sufficient)"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "remove a role from a staff member",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "staff_id",
+            "description": "id of the staff we are removing the role from",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "role_id",
+            "description": "id of the role we are removing from the staff",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - role was removed"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden (role not sufficient)"
+          }
+        }
+      }
+    },
+    "/UserCitizen/address/{id}": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "adds an address to a citizen",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "id of the staff we are assign the address to",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "address",
+            "description": "address to assign to citizen",
+            "schema": {
+              "$ref": "#/definitions/Address"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - address was added"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "404": {
+            "description": "failed - citizen not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "remove an address from a citizen",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "id of the citizen we are removing the address from",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - address was removed"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "404": {
+            "description": "failed - citizen not found"
+          }
+        }
+      }
+    },
+    "/UserCitizen/insurance/{id}": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "adds an insurance to a citizen",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "id of the staff we are assign the insurance to",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "address",
+            "description": "insurance to assign to citizen",
+            "schema": {
+              "$ref": "#/definitions/Insurance"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - insurance was added"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "404": {
+            "description": "failed - citizen not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "remove an insurance from a citizen",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "id of the citizen we are removing the insurance from",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - insurance was removed"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "404": {
+            "description": "failed - citizen not found"
+          }
+        }
+      }
+    },
+    "/UserCitizen/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get a citizen user by their id",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "id of citizen member",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - citizen object returned"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "404": {
+            "description": "failed - citizen not found"
+          }
+        }
+      }
+    },
+    "/UserStaff/self": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "delete a staff user - if staff wants to delete themselves",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "username",
+            "description": "username of staff member - if staff wants to delete themselves",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "description": "email of staff member",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - staff was deleted"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "404": {
+            "description": "failed - staff not found"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get info for self - staff",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "token",
+            "description": "get info for self",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - staff member was retrieved"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "404": {
+            "description": "failed - staff not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "update info for self - staff",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "token",
+            "description": "put info for self",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Staff"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and authorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - staff was updated"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "404": {
+            "description": "failed - staff not found"
+          }
+        }
+      }
+    },
+    "/UserStaff": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get a staff user by non-id",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "username",
+            "description": "username of staff member",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "description": "email of staff member",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and authorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - staff was retrieved"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "404": {
+            "description": "failed - staff not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "update a staff user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Staff object that needs to be updated in the application (all fields optional aside from unique identifiers)",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Staff"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and authorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - staff was updated"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "404": {
+            "description": "failed - staff not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "delete a staff user- admin only",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "username",
+            "description": "username of staff member - ADMIN ONLY",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "description": "email of staff member",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and authorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - staff was deleted"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "add a staff user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Staff object that needs to be added to the application",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Staff"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and authorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - staff was added"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      }
+    },
+    "/UserStaff/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "authenticate a staff member",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "citizen auth info to be authenticated",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Authenticate"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - staff credentials are authenticated, object with token returned"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "404": {
+            "description": "failed - staff not found"
+          }
+        }
+      }
+    },
+    "/UserStaff/logout": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "log out of staff member account",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and authorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - staff was logged out, token cleared"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/UserStaff/role/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get all roles of a staff member",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "id of citizen getting the role of",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and authorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - get list of roles for staff member"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/UserStaff/role/self": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get all roles of self (staff member)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and authorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - get ilst of roles for staff member"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/UserCitizen": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "get a citizen user without id",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "first_name",
+            "description": "first name of citizen",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "last_name",
+            "description": "first name of citizen",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "description": "email of citizen",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - citizen was retrieved"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "404": {
+            "description": "failed - citizen not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "update a citizen user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Citizen object that needs to be updated in the application (all fields optional aside from unique identifiers)",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Citizen"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - citizen was updated"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "delete a citizen user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "first_name",
+            "description": "first name of citizen",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "last_name",
+            "description": "first name of citizen",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "description": "email of citizen",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - citizen was deleted"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "add a citizen user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "citizen object that needs to be added to the application",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Citizen"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - citizen was added"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      }
+    },
+    "/UserStaff/password": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "changing staff member password",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "password and user id required ONLY - resets current password with password",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Staff"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - staff password was updated"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/Appointment": {
+      "post": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "creates an available appointment for a citizen to register for (priviliged users)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Timeslot",
+            "description": "create a timeslot for a dose at a location for a certain time with default status (citizen ID, staffID, doseID, and timeslotID should remain null)",
+            "schema": {
+              "$ref": "#/definitions/Timeslot"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - appointment created"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "remove a timeslot",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "appointment_id",
+            "description": "id of the timeslot we are removing",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - appointment deleted"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "gets appointments of certain type",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "category_id",
+            "description": "the timeslot filtered by categoryID (first dose, second dose, etc)",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "vaccine_supplier",
+            "description": "the timeslot filtered by supplier of the vaccine (Pfizer, Moderna, etc)",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - appointment retrieved"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/Appointment/all": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "get all appointments",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - all appointments retrieved"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/Appointment/all/open": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "get all open appointments",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "202": {
+            "description": "success - all open appointments retrieved"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      }
+    },
+    "/Appointment/all/open/{vaccine_supplier}": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "gets appointments of certain type",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "category_id",
+            "description": "the timeslot filtered by categoryID (first dose, second dose, etc)",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "vaccine_supplier",
+            "description": "the timeslot filtered by supplier of the vaccine (Pfizer, Moderna, etc)",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - retrieves all open appointments from supplier retrieved"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      }
+    },
+    "/Appointment/all/location/open": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "gets open appointments at a certain location",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "location_id",
+            "description": "the timeslot filtered by locationID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - retrieves all open appointments at a location"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      }
+    },
+    "/Appointment/all/location": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "gets appointments at a certain location",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "location_id",
+            "description": "the timeslot filtered by locationID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - retrieves all appointments at a location"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/Appointment/all/location/{supplier}": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "gets appointments at a certain location with a certain vaccine type",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "supplier",
+            "description": "the supplier of the vaccine",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "category_id",
+            "description": "the timeslot filtered by categoryID",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "location_id",
+            "description": "the timeslot filtered by locationID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - retrieves all appointments at a location in a category"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/Appointment/all/location/open/{supplier}": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "gets open appointments at a certain location with a certain vaccine type",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "supplier",
+            "description": "the supplier of the vaccine",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "category_id",
+            "description": "the timeslot filtered by categoryID",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "location_id",
+            "description": "the timeslot filtered by locationID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - retrieves all open appointments at a location with a category/supplier"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/Appointment/citizen/{id}": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "get all appointments that a certain citizen has",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "the id of the citizen appointments will be filtered by",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - retrieves all appointments for citizen"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "404": {
+            "description": "failed - citizen was not found"
+          }
+        }
+      }
+    },
+    "/Appointment/date": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "get all appointments for a certain date (usecase example: staff get appointments for current day)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "date value to search on - needs to be in format YYYY-MM-DD",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - retrieves all appointments for a date"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/Appointment/open/date": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "get all appointments for a certain date (usecase example: citizen get appointments for current day)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date",
+            "description": "date value to search on - needs to be in format YYYY-MM-DD",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - retrieves all open appointments for a date"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      }
+    },
+    "/Appointment/date/{location_id}": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "get all appointments for a certain date (usecase example: staff get appointments for current day) at a location",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "date value to search on - needs to be in format YYYY-MM-DD",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "location_id",
+            "description": "location searching on",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - retrieves all appointments for a certain date at a location"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/Appointment/date/open/{location_id}": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "get all open appointments for a certain date (usecase example: staff get appointments for current day) at a location",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date",
+            "description": "date value to search on - needs to be in format YYYY-MM-DD",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "location_id",
+            "description": "location searching on",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - retrieves all open appointments for a certain date at a location"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      }
+    },
+    "/Appointment/{id}": {
+      "get": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "get appointment by ID",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "get timeslot by this id",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - retrieves appointment with ID"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "404": {
+            "description": "failed - appointment not found"
+          }
+        }
+      }
+    },
+    "/Appointment/Signup": {
+      "put": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "updates an appointment with citizen id (when citizen signs up)",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Timeslot",
+            "description": "sign a citizen up for a timeslot (ONLY accepts citizenID and timeslotID), auto-gets available dosage if available",
+            "schema": {
+              "$ref": "#/definitions/Timeslot"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "vaccine_type",
+            "description": "the type of vaccine being 'taken'",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - signs up citizen for slot with dose"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "404": {
+            "description": "failed - no vaccine available with these specifications"
+          }
+        }
+      }
+    },
+    "/Appointment/AddReactions": {
+      "put": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "updates an appointment with reactions a citizen experiences while they wait to be released after the vaccine is administered",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Timeslot",
+            "description": "add a reaction for a citizen through a timeslot (ONLY accepts reactions string and timeslotID)",
+            "schema": {
+              "$ref": "#/definitions/Timeslot"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - reactions added to timeslot"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/Appointment/AssignStaff": {
+      "put": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "updates an appointment with staff id (when staff assigned to a timeslot) - does not check if staff is assigned to other appointment at that time, but should not be issue (will be assigned once available)",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Timeslot",
+            "description": "assign a staff member to a timeslot (ONLY accepts staffID and timeslotID)",
+            "schema": {
+              "$ref": "#/definitions/Timeslot"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - assigns staff to appointment"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/Appointment/UpdateStatus": {
+      "put": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "updates an appointment with status",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Timeslot",
+            "description": "status to update timeslot to (ONLY timeslot_id and status)",
+            "schema": {
+              "$ref": "#/definitions/Timeslot"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - status updated"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/Appointment/VaccineAdministered/{batch}": {
+      "put": {
+        "tags": [
+          "Appointments & Timeslots"
+        ],
+        "summary": "updates an appointment status and batch number",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Timeslot",
+            "description": "ONLY timeslot_id, auto changes status to complete and both citizen and staff are tied to appointment",
+            "schema": {
+              "$ref": "#/definitions/Timeslot"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "batch",
+            "description": "batch number of administered vaccine",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - updated batch number and status successfully"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          }
+        }
+      }
+    },
+    "/vaccine/all": {
+      "get": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "gets all vaccines for display",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "202": {
+            "description": "json list of all vaccine info"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      }
+    },
+    "/vaccine": {
+      "post": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "Create a new vaccine (priviliged users)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Authorization Token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Vaccine",
+            "description": "Create a vaccine (vaccine ID should remain null)",
+            "schema": {
+              "$ref": "#/definitions/Vaccine"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - vaccine created"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "Update a vaccine",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Authorization Token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Vaccine",
+            "description": "The vaccine being updated (must have existing vaccine_id)",
+            "schema": {
+              "$ref": "#/definitions/Vaccine"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - vaccine updated"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "Get vaccines by category or disease",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "category_id",
+            "description": "Vaccine filtered by categoryID (first dose, second dose, etc)",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "disease_id",
+            "description": "Vaccine filtered by diseaseID (COVID19, FLU, etc)",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - vaccine retrieved"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      }
+    },
+    "/vaccine/category": {
+      "post": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "Create a new category (privileged users)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Authorization token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Category",
+            "description": "Create a vaccine category (ID should remain null/0)",
+            "schema": {
+              "$ref": "#/definitions/Category"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - vaccine category created"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "Update a category",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Bearer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Category",
+            "description": "The category being updated (must have existing id)",
+            "schema": {
+              "$ref": "#/definitions/Category"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - vaccine category updated"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "Get vaccine categories",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "category_id",
+            "description": "ID to be returned. Returns all categories if not included",
+            "type": "integer",
+            "required": false
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - vaccine category retrieved"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      }
+    },
+    "/vaccine/disease": {
+      "post": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "Create a new disease (privileged users)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Authorization token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Disease",
+            "description": "Create a vaccine disease (ID should remain null/0)",
+            "schema": {
+              "$ref": "#/definitions/Disease"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - disease created"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "Update a disease",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Bearer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Disease",
+            "description": "The disease being updated (must have existing id)",
+            "schema": {
+              "$ref": "#/definitions/Disease"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - disease updated"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "Get diseases",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "disease_id",
+            "description": "ID to be returned. Returns all diseases if not included",
+            "type": "integer",
+            "required": false
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - disease retrieved"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      }
+    },
+    "/vaccine/dose": {
+      "post": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "Add quantity number of doses with the given supplier, vaccine and location (privileged users)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Authorization token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Dose",
+            "description": "Dose information to be added",
+            "schema": {
+              "$ref": "#/definitions/Dose"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - doses created"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "Update a dose",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Bearer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Dose",
+            "description": "The dose being updated (must have existing id)",
+            "schema": {
+              "$ref": "#/definitions/Dose"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - doses updated"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Vaccines"
+        ],
+        "summary": "Get doses",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Authorization token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "dose_id",
+            "description": "ID to be returned. Returns all doses if not included",
+            "type": "integer",
+            "required": false
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "success - doses retrieved"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          },
+          "401": {
+            "description": "failed - unauthorized"
+          },
+          "403": {
+            "description": "failed - forbidden"
+          }
+        }
+      }
+    },
+    "/location": {
+      "post": {
+        "tags": [
+          "Location"
+        ],
+        "summary": "Create a new location (priviliged users)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Authorization Token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Location",
+            "description": "Create a location (location ID should remain null)",
+            "schema": {
+              "$ref": "#/definitions/Location"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          },
+          "403": {
+            "description": "Valid token, but doesn't have permission"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Location"
+        ],
+        "summary": "Update a location",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Authorization Token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "Location",
+            "description": "The location being updated (must have existing location_id)",
+            "schema": {
+              "$ref": "#/definitions/Location"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          },
+          "403": {
+            "description": "Valid token, but doesn't have permission"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Location"
+        ],
+        "summary": "Get locations by id, city, zip, or if none are specified the full list of locations",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "location_id",
+            "description": "Location ID",
+            "type": "integer",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "city",
+            "description": "Get locations filtered by city",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "zip",
+            "description": "Get locations filtered by 5 digit zip",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      }
+    },
+    "/location/staff": {
+      "post": {
+        "tags": [
+          "Location"
+        ],
+        "summary": "Assign a staff member to this location (priviliged users)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Authorization Token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "StaffLocation",
+            "description": "Assign specified staff member to specified location",
+            "schema": {
+              "$ref": "#/definitions/StaffLocation"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          },
+          "403": {
+            "description": "Valid token, but doesn't have permission"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Location"
+        ],
+        "summary": "Get list of staff at this location",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "location_id",
+            "description": "Location ID",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          },
+          "400": {
+            "description": "failed - some error was thrown"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Location"
+        ],
+        "summary": "Remove a staff member from this location",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Authorization Token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "StaffLocation",
+            "description": "Specified staff to be removed from specified location",
+            "schema": {
+              "$ref": "#/definitions/StaffLocation"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          },
+          "403": {
+            "description": "Valid token, but doesn't have permission"
+          }
+        }
+      }
+    },
+    "/Report/staff/{staff_id}": {
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "summary": "get all reporting insights for a specific staff member including name, locations, total patients prrocessed, count of adverse reactions",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "staff_id",
+            "description": "filters staff insight results by this staff_id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "filters staff_id insight results by this date (from this date -> present day)",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "returns information about total vaccinations given by staff member filtered by staff id and date"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          }
+        }
+      }
+    },
+    "/Report/location/{location_id}": {
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "summary": "get all reporting insights for a location - includes total patients processed, total for each vaccine manufacturer, total for each sequence, total adverse reactions",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "location_id",
+            "description": "the location the staff member is getting insights for",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "filters vaccine insight results by this date (from this date -> present day)",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "returns information about locations filtered by date and location id"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          }
+        }
+      }
+    },
+    "/Report/reactions": {
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "summary": "get all reporting insights for reactions - including date, patient name, staff name, vaccine manufacturer, brand, batch number, and reaction notes",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "returns information about all reactions"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          }
+        }
+      }
+    },
+    "/Report/batch/{batch}": {
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "summary": "get all reporting insights for a certain batch number on a certain day at a certain location - list all patients by date and location who recieved shots from a particular batch of vaccine",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "batch",
+            "type": "string",
+            "required": true,
+            "description": "the batch number of the vaccine you are looking to search on"
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "the date to filter on (EXACT date to search on - no range!)",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "location_id",
+            "description": "the location id to filter on",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "returns information about a batch on a specific day at a specific location"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          }
+        }
+      }
+    },
+    "/Reminders/SendReminders": {
+      "get": {
+        "tags": [
+          "Reminders"
+        ],
+        "summary": "send email reminder with appointment information to all citizens with an appointment the next day",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successful response"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          }
+        }
+      }
+    },
+    "/Eligibility/Category": {
+      "post": {
+        "tags": [
+          "Eligibility"
+        ],
+        "summary": "set eligibility category information",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "eligibility",
+            "description": "eligibility object to be added (no id needed)",
+            "schema": {
+              "$ref": "#/definitions/Eligibility"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successful response"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Eligibility"
+        ],
+        "summary": "update eligibility category information",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "eligibility",
+            "description": "eligibility object to be updated",
+            "schema": {
+              "$ref": "#/definitions/Eligibility"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successful response"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          }
+        }
+      }
+    },
+    "/Eligibility/Category/{eligibility_id}": {
+      "delete": {
+        "tags": [
+          "Eligibility"
+        ],
+        "summary": "delete eligibility category",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "eligibility_id",
+            "description": "id of eligibility category to delete",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successful response"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/Eligibility/{eligibility_id}": {
+      "delete": {
+        "tags": [
+          "Eligibility"
+        ],
+        "summary": "delete eligibility text",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "eligibility_id",
+            "description": "id of eligibility text to delete (WILL DELETE ALL LANGS WITH THIS ID!)",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successful response"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/Eligibility": {
+      "post": {
+        "tags": [
+          "Eligibility"
+        ],
+        "summary": "set eligibility information",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "eligibility",
+            "description": "eligibility object to be added (no id needed)",
+            "schema": {
+              "$ref": "#/definitions/EligibilityText"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successful response"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Eligibility"
+        ],
+        "summary": "update eligibility information",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "eligibility",
+            "description": "eligibility object to be updated",
+            "schema": {
+              "$ref": "#/definitions/EligibilityText"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successful response"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Eligibility"
+        ],
+        "summary": "get all eligibility information",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "202": {
+            "description": "dictionary structure with all eligibility objects and associated questions and answers in each language"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/DynamicContent": {
+      "post": {
+        "tags": [
+          "Dynamic Content"
+        ],
+        "summary": "add dynamic content information",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "pageContent",
+            "description": "page content to be added",
+            "schema": {
+              "$ref": "#/definitions/PageContent"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successful response"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Dynamic Content"
+        ],
+        "summary": "get all dynamic content information",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "202": {
+            "description": "list of all page content"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/DynamicContent/{content_id}": {
+      "delete": {
+        "tags": [
+          "Dynamic Content"
+        ],
+        "summary": "remove dynamic content information",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "content_id",
+            "description": "id of content to be removed",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successful response"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Dynamic Content"
+        ],
+        "summary": "get dynamic content information from certain id",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "content_id",
+            "description": "id of content to get",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "list of all page content with id"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/DynamicContent/label": {
+      "put": {
+        "tags": [
+          "Dynamic Content"
+        ],
+        "summary": "update dynamic content information by label",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "pageContent",
+            "description": "page content to be added - NEED LABEL",
+            "schema": {
+              "$ref": "#/definitions/PageContent"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successful response"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Dynamic Content"
+        ],
+        "summary": "get dynamic content information from certain label",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "label",
+            "description": "label of content to get",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "list of all page content with label"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/DynamicContent/id": {
+      "put": {
+        "tags": [
+          "Dynamic Content"
+        ],
+        "summary": "update dynamic content information by id",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "baerer token for security and autorization",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "pageContent",
+            "description": "page content to be added - NEED ID",
+            "schema": {
+              "$ref": "#/definitions/PageContent"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successful response"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Missing or invalid auth token"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "PageContent": {
+      "type": "object",
+      "properties": {
+        "content_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "label": {
+          "type": "string"
+        },
+        "text_en": {
+          "type": "string"
+        },
+        "text_es": {
+          "type": "string"
+        }
+      }
+    },
+    "Eligibility": {
+      "type": "object",
+      "properties": {
+        "eligibility_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "vaccine_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "dependency": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "EligibilityText": {
+      "type": "object",
+      "properties": {
+        "text_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "language": {
+          "type": "string"
+        },
+        "eligibility_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "type": {
+          "type": "string"
+        },
+        "textQ": {
+          "type": "string"
+        },
+        "textA": {
+          "type": "string"
+        }
+      }
+    },
+    "Timeslot": {
+      "type": "object",
+      "properties": {
+        "timeslot_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "staff_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "citizen_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "location_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "dose_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "date": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "reactions": {
+          "type": "string"
+        }
+      }
+    },
+    "Staff": {
+      "type": "object",
+      "properties": {
+        "staff_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "email": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        }
+      }
+    },
+    "Vaccine": {
+      "type": "object",
+      "properties": {
+        "vaccine_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "category_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "disease_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "Dose": {
+      "type": "object",
+      "properties": {
+        "dose_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "supplier": {
+          "type": "string"
+        },
+        "vaccine_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "location_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "batch": {
+          "type": "string"
+        }
+      }
+    },
+    "Disease": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Citizen": {
+      "type": "object",
+      "properties": {
+        "citizen_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "email": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "insurance_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "date_of_birth": {
+          "type": "string"
+        },
+        "address_id": {
+          "type": "integer"
+        },
+        "phone_number": {
+          "type": "string"
+        },
+        "id_type": {
+          "type": "string",
+          "description": "Type of ID presented at checkin (Passport, Driver's License, etc)"
+        },
+        "id_number": {
+          "type": "string",
+          "description": "ID Number from presented ID document"
+        }
+      }
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "address_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "street_line2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        }
+      }
+    },
+    "Insurance": {
+      "type": "object",
+      "properties": {
+        "insurance_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "carrier": {
+          "type": "string"
+        },
+        "group_number": {
+          "type": "string"
+        },
+        "member_id": {
+          "type": "string"
+        }
+      }
+    },
+    "Authenticate": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Location": {
+      "type": "object",
+      "properties": {
+        "location_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "address_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "street_line2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        }
+      }
+    },
+    "StaffLocation": {
+      "type": "object",
+      "properties": {
+        "staff_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "location_id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
